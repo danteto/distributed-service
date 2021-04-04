@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -23,9 +24,10 @@ public class ZooKeeperClientImpl implements ZooKeeperClient {
     @Override
     public void connect(Watcher watcher) {
         try {
-            zooKeeper = new ZooKeeper("zookeeper:2181", 5_000, watcher);
+            String zooKeeperUrl = zooKeeperProperties.getHost().concat(":").concat(zooKeeperProperties.getPort());
+            zooKeeper = new ZooKeeper(zooKeeperUrl, zooKeeperProperties.getSession(), watcher);
         } catch (IOException e) {
-            log.debug("### ZOOKEEPER HAS NOT BEEN CONNECTED");
+            log.debug("Unable to connect to ZooKeeper");
             e.printStackTrace();
         }
     }
@@ -67,6 +69,14 @@ public class ZooKeeperClientImpl implements ZooKeeperClient {
         } catch (KeeperException | InterruptedException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    @Override
+    public String getLeader(String path) {
+        final List<String> children = getChildren(path, false);
+        Collections.sort(children);
+
+        return children.get(0);
     }
 
     private CreateMode toNodeType(NodeType nodeType) {

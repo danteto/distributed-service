@@ -13,4 +13,6 @@ public interface ZooKeeperClient {
     boolean setWatch(final String node, final boolean watch);
 
     List<String> getChildren(final String node, final boolean watch);
+
+    String getLeader(String path);
 }
