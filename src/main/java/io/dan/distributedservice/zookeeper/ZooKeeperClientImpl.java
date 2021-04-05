@@ -13,6 +13,7 @@ import java.util.List;
 @Service
 public class ZooKeeperClientImpl implements ZooKeeperClient {
     private final static Logger log = LoggerFactory.getLogger(ZooKeeperClientImpl.class);
+    private static final String ELECTION_PATH = "/election";
 
     private ZooKeeper zooKeeper;
     private ZooKeeperProperties zooKeeperProperties;
@@ -27,23 +28,24 @@ public class ZooKeeperClientImpl implements ZooKeeperClient {
             String zooKeeperUrl = zooKeeperProperties.getHost().concat(":").concat(zooKeeperProperties.getPort());
             zooKeeper = new ZooKeeper(zooKeeperUrl, zooKeeperProperties.getSession(), watcher);
         } catch (IOException e) {
-            log.debug("Unable to connect to ZooKeeper");
+            log.error("Unable to connect to ZooKeeper");
             e.printStackTrace();
         }
     }
 
     @Override
-    public String createNode(String path, boolean isWatched, NodeType nodeType) {
-        String createdPath;
+    public String createNode(String path, NodeType nodeType) {
+        String createdPath = null;
         try {
-            final Stat stat = zooKeeper.exists(path, isWatched);
-
+            final Stat stat = zooKeeper.exists(path, false);
+            log.info("### Stat = " + stat);
             if (stat == null) {
                 createdPath = zooKeeper.create(path, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE, toNodeType(nodeType));
             } else {
                 createdPath = path;
             }
         } catch (KeeperException | InterruptedException e) {
+            log.error(e.getLocalizedMessage());
             throw new IllegalStateException(e);
         }
 
@@ -63,20 +65,17 @@ public class ZooKeeperClientImpl implements ZooKeeperClient {
     }
 
     @Override
-    public List<String> getChildren(String node, boolean isWatched) {
+    public List<String> getChildren(String node) {
         try {
-            return zooKeeper.getChildren(node, isWatched);
+            return zooKeeper.getChildren(node, false);
         } catch (KeeperException | InterruptedException e) {
             throw new IllegalStateException(e);
         }
     }
 
     @Override
-    public String getLeader(String path) {
-        final List<String> children = getChildren(path, false);
-        Collections.sort(children);
-
-        return children.get(0);
+    public List<String> getActiveNodes() {
+        return getChildren(ELECTION_PATH);
     }
 
     private CreateMode toNodeType(NodeType nodeType) {

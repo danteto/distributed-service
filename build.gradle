@@ -16,7 +16,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation('org.apache.zookeeper:zookeeper:3.6.2') {
-        //exclude transitive logging dependency from zookeeper
+        //transitive logging dependency from zookeeper
         exclude group: 'org.slf4j'
     }
 }
