@@ -1,0 +1,44 @@
+version: "3"
+
+services:
+
+  service1:
+    build:
+      context: .
+    ports:
+      - "8081:8080"
+    container_name: service1
+    depends_on:
+      - zookeeper
+    networks:
+      - common-network
+
+    environment:
+      SERVICE_NAME: service1
+
+  service2:
+    build:
+      context: .
+    ports:
+      - "8082:8080"
+    container_name: service2
+    depends_on:
+      - zookeeper
+    networks:
+      - common-network
+
+    environment:
+      SERVICE_NAME: service2
+
+  zookeeper:
+    ports:
+      - "2181:2181"
+    container_name: zookeeper
+    image: zookeeper
+    restart: always
+    networks:
+      - common-network
+
+networks:
+  common-network:
+    driver: bridge
