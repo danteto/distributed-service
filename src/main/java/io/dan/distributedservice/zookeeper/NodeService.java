@@ -27,7 +27,7 @@ public class NodeService {
     public void execute() {
         zooKeeperClient.connect(new NodeWatcher());
         NodeInfo.setServiceName(System.getenv("SERVICE_NAME"));
-        log.info("### Node with name: " + NodeInfo.getServiceName() + " has started");
+        log.info("Node with name: " + NodeInfo.getServiceName() + " has started");
 
         final String electionPath = zooKeeperClient.createNode(ELECTION_PATH, NodeType.PERSISTENT);
         if (electionPath == null) {

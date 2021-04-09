@@ -38,7 +38,7 @@ public class ZooKeeperClientImpl implements ZooKeeperClient {
         String createdPath = null;
         try {
             final Stat stat = zooKeeper.exists(path, false);
-            log.info("### Stat = " + stat);
+            log.info("Stat = " + stat);
             if (stat == null) {
                 createdPath = zooKeeper.create(path, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE, toNodeType(nodeType));
             } else {
