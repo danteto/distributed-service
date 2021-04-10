@@ -7,13 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
+
+import static io.dan.distributedservice.zookeeper.ZooKeeperPaths.ELECTION_PATH;
 
 @Service
 public class ZooKeeperClientImpl implements ZooKeeperClient {
     private final static Logger log = LoggerFactory.getLogger(ZooKeeperClientImpl.class);
-    private static final String ELECTION_PATH = "/election";
 
     private ZooKeeper zooKeeper;
     private ZooKeeperProperties zooKeeperProperties;
@@ -38,7 +38,6 @@ public class ZooKeeperClientImpl implements ZooKeeperClient {
         String createdPath = null;
         try {
             final Stat stat = zooKeeper.exists(path, false);
-            log.info("Stat = " + stat);
             if (stat == null) {
                 createdPath = zooKeeper.create(path, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE, toNodeType(nodeType));
             } else {

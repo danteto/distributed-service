@@ -9,13 +9,14 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.List;
 
+import static io.dan.distributedservice.zookeeper.ZooKeeperPaths.ELECTION_PATH;
+import static io.dan.distributedservice.zookeeper.ZooKeeperPaths.NODE;
+
 @Component
 public class NodeService {
     private static final Logger log = LoggerFactory.getLogger(NodeService.class);
 
     private ZooKeeperClient zooKeeperClient;
-    private static final String ELECTION_PATH = "/election";
-    private static final String NODE = "/node_";
     private String nodePath;
     private String watchedNodePath;
 
