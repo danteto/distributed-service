@@ -1,6 +1,9 @@
 Apache ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services. 
+
 Some of the distributed systems coordination problems that zookeeper solves: manage cluster membership, locks in distributed systems, and leader election. 
+
 Apache Zookeeper solves these problems using a hierarchical namespace, much like a distributed file system. Every node in the namespace is referred to as a znode. Znodes maintain a stat structure that includes version numbers for data changes, ACL changes. The stat structure also has timestamps.
+
 I have implemented a simple spring boot application to demonstrate one of the implementations of the leader election algorithm using Apache Zookeeper. It executes the election process and stores information about the leader and active nodes.
 
 There are 4 main classes:
