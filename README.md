@@ -20,4 +20,6 @@ The process of leader election is as follows: each node will create an ephemeral
 For example, if the current process znode is "node_0000004" and other process znodes are "node_0000001", "node_0000002", "node_0000003", "node_0000005" then the current process znode will be setting the watch on znode with path "node_0000003". 
 As soon as the watched ephemeral znode is removed by ZooKeeper due to the process being shut down, the current process gets a watch event notification. Hereafter, the current process again fetches the child znodes of "/election" and repeats the steps of checking whether it is a leader.
 
+Additionally, for convenience, I created the docker-compose.yml file to run two or more services concurrently. 
+
 Take a look at my publication on <a href="https://tolonbekov.medium.com/a-practical-example-of-the-leader-election-process-in-distributed-systems-2e1ce9aa42a6">Medium</a> for details. 
